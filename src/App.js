@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from "react"
+import axios from "axios";
 
 function App() {
+  const [paintings, setPaintings] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/paintings")
+        .then(res => {
+          console.log(res.data);
+          setPaintings(res.data);
+        },[])
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ display: "flex", flexFlow: "row wrap", }}>
+        {paintings.map(painting => (
+            <div style={{ margin: 5, textAlign: "center" }}>
+                <img width="300" height="299" src={painting.image} alt={painting.name}/>
+                <p style={{ fontWeight: 900 }}>{painting.name} - {painting.artist}</p>
+                <p style={{ fontWeight: 700 }}>${painting.price}</p>
+            </div>
+        ))}
     </div>
   );
 }
